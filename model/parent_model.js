@@ -62,29 +62,34 @@ const parentSchema = new Schema({
         type:String,
         required:true,        
     },
+    
+    credits : {
+        type:String,
+        required: true,
+    }
 });
 
-parentSchema.pre('save',async function() {
-    try {
-        var parent = this;
-        const salt = await(bcrypt.genSalt(10));
-        const hashpass = await bcrypt.hash(parent.password,salt);
+// parentSchema.pre('save',async function() {
+//     try {
+//         var parent = this;
+//         const salt = await(bcrypt.genSalt(10));
+//         const hashpass = await bcrypt.hash(parent.password,salt);
 
-        parent.password = hashpass;
+//         parent.password = hashpass;
         
-    } catch (error) {
-        throw error;
-    }
-});
+//     } catch (error) {
+//         throw error;
+//     }
+// });
 
-parentSchema.methods.comparePassword = async function(password){
-    try {
-        const isMatch = await bcrypt.compare(password,this.password);
-        return isMatch;
-    } catch (error) {
-        throw error;
-    }
-}
+// parentSchema.methods.comparePassword = async function(password){
+//     try {
+//         const isMatch = await bcrypt.compare(password,this.password);
+//         return isMatch;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 const ParentModel = db.model('parents',parentSchema);
 

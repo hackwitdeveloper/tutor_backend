@@ -11,6 +11,14 @@ class StudentService{
             throw error
         }
     }
+
+    static async checkuser(email){
+        try {
+            return await StudentModel.findOne({email})
+        } catch (error) {
+            throw error
+        }
+    }
     
     static async studentLogin(email){
         try {
@@ -53,8 +61,6 @@ class StudentService{
         } catch (error) {
             throw error
         }
-    }
-
-    
+    }   
 }
 module.exports = StudentService;

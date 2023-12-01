@@ -13,7 +13,7 @@ const teacherSchema = new Schema({
         type:String,
         required:true,
     },
-    laname:{
+    lname:{
         type:String,
         required:true,
     },
@@ -51,7 +51,7 @@ const teacherSchema = new Schema({
         type:String,
         required:true,
     },
-    Experience:{
+    experience:{
         type:String,
         required:true,
     },
@@ -67,6 +67,14 @@ const teacherSchema = new Schema({
         type:String,
         required:true,
     },
+    teacherimage:{
+        type:String,
+        default: " ",
+    },
+    credits :{
+        type:String,
+        required:true,
+    }
 });
 
 teacherSchema.pre('save',async function() {
@@ -81,14 +89,14 @@ teacherSchema.pre('save',async function() {
     }
 });
 
-teacherSchema.methods.comparePassword = async function(password){
-    try {
-        const isMatch = await bcrypt.compare(password,this.password);
-        return isMatch;
-    } catch (error) {
-       throw error 
-    }
-}
+// teacherSchema.methods.comparePassword = async function(password){
+//     try {
+//         const isMatch = await bcrypt.compare(password,this.password);
+//         return isMatch;
+//     } catch (error) {
+//        throw error 
+//     }
+// }
 
 const TeacherModel = db.model('teacher',teacherSchema);
 

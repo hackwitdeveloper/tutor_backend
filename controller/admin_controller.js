@@ -20,20 +20,20 @@ exports.login = async (req, res, next) => {
         const Admin = await AdminServices.loginAdmin(email, password);
 
         if (!Admin) {
-            res.status(401).json({ message: 'Admin not found' })
+           return res.status(401).json({ message: 'Admin not found' })
         }
         const isMatchAdmin = await Admin.comparePasswords(password);
 
         if (!isMatchAdmin) {
-            res.status(401).json({ message: 'Invalid Password' })
+           return res.status(401).json({ message: 'Invalid Password' })
         }
 
         const token = jwt.sign({ email: email, role: 'Admin' }, 'Hackwit', { expiresIn: '1h' });
 
-        res.status(200).json({ token });
+       return res.status(200).json({ token });
 
     } catch (error) {
-        throw error
+        next (error)
     }
 }
 

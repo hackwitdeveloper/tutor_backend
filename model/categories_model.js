@@ -8,9 +8,9 @@ const categoriesSchema = new Schema({
         type:String,
         required:true,
     },
-    image:{
-        type:String,
-        required:true,
+    categoryimage:{
+        type: String,
+        default:""
     },
 });
 

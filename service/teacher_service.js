@@ -3,13 +3,21 @@ const IdcodeServices = require('./idcode_service');
 
 
 class TeacherService {
-    static async teacherregister(fname,laname,gender,email,phone,address,state,postcode,password,subject,Experience,qualification,bio,verification){
+    static async teacherregister(fname,lname,gender,email,phone,address,state,postcode,password,subject,experience,qualification,bio,verification,teacherimage,credits){
         try {
             var tutor_id = await IdcodeServices.generateCode("teacher");
-            const createUser = new TeacherModel({tutor_id,fname,laname,gender,email,phone,address,state,postcode,password,subject,Experience,qualification,bio,verification});
+            const createUser = new TeacherModel({tutor_id,fname,lname,gender,email,phone,address,state,postcode,password,subject,experience,qualification,bio,verification,teacherimage,credits});
             return await createUser.save();
         } catch (error) {
             throw error;
+        }
+    }
+
+    static async checkuser(email){
+        try {
+            return await TeacherModel.findOne({email})
+        } catch (error) {
+            throw error
         }
     }
 
@@ -21,13 +29,32 @@ class TeacherService {
         }
     }
 
-    static async teacherUpdate(tutor_id,fname,laname,gender,email,phone,address,state,postcode,password,subject,Experience,qualification,bio,verification){
+    static async teacherUpdate(tutor_id, fname, lname, gender, email, phone, address, state, postcode, password, subject, experience, qualification, bio, verification, credits, filename) {
         try {
-            var query = {tutor_id:tutor_id};
-            var values = { $set: {fname:fname,laname:laname,gender:gender,email:email,phone:phone,address:address,state:state,postcode:postcode,password:password,subject:subject,Experience:Experience,qualification:qualification,bio:bio,verification:verification}};
-            return await TeacherModel.updateOne(query,values);
+            var query = { tutor_id: tutor_id };
+            var values = {
+                $set: {
+                    fname: fname,
+                    laname: lname,
+                    gender: gender,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    state: state,
+                    postcode: postcode,
+                    password: password,
+                    subject: subject,
+                    experience: experience,
+                    qualification: qualification,
+                    bio: bio,
+                    verification: verification,
+                    credits: credits,
+                    teacherimage: filename 
+                }
+            };
+            return await TeacherModel.updateOne(query, values);
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 

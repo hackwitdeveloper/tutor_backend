@@ -1,13 +1,17 @@
 
 const StudentService = require('../service/student_service');
-jwt = require('jsonwebtoken');
+
 
 exports.studentRegister = async (req,res,next) =>{
     try {
         const { student_id,fname,lname,gender,dob,grade,email,phone,subject,tution_slot,gname,gphone,address,state,postcode,password } = req.body;
+        const student = await StudentService.checkuser(email);
+        if(student){
+            return res.status(401).json({message:"Email is already registered"});
+        }
+        
         const successRes = await StudentService.studentRegister(fname,lname,gender,dob,grade,email,phone,subject,tution_slot,gname,gphone,address,state,postcode,password);
-        console.log(successRes);
-
+        console.log(successRes); 
         res.status(200).json({status:true,success:"Students Registered Successfully",successRes});
         
     } catch (error) {
@@ -18,16 +22,34 @@ exports.studentRegister = async (req,res,next) =>{
 exports.studentLogin = async (req,res,next)=>{
     try {
         const { email,password } = req.body;
-        const student = await StudentService.studentLogin(email,password);
+        const student = await StudentService.studentLogin(email);
         if(!student){
-            res.status(401).json({message:"User not found"});
+           return res.status(401).json({message:"User not found"});
         }
-        const isMatch = await student.comparePassword(password);
+        const isMatch = await student.comparePassword2(password);
         if(!isMatch){
-            res.status(401).json({message:"Invalid Password"});
+           return res.status(401).json({message:"Invalid Password"});
         }
-        const token = jwt.sign({email:email,role:'Student'},'Hackwit',{expiresIn:'1h'});
-        res.status(200).json({token});
+        const tokenData = {
+            fname:student.fname,
+            lname:student.lname,
+            gender:student.gender,
+            dob:student.dob,
+            gname:student.gname,
+            email:student.email,
+            phone:student.phone,
+            password:student.password,
+            postcode:student.postcode,
+            state:student.state,
+            address:student.address,
+            gphone:student.gphone,
+            grade:student.grade,
+            subject:student.subject,
+            tution_slot:student.tution_slot,
+        }
+          
+        // const token = jwt.sign({email:email,role:'Student'},'Hackwit',{expiresIn:'1h'});
+        res.status(200).json({tokenData});
     } catch (error) {
         throw error
     }
@@ -54,7 +76,7 @@ exports.studentDelete = async (req,res,next)=> {
 }
 exports.studentGet = async (req,res,next)=> {
     try {
-        const { student_id:student_id } = req.body;
+        const { student_id:student_id } = req.query;
         const getData = await StudentService.getStudent(student_id);
         res.status(200).json(getData);
     } catch (error) {
